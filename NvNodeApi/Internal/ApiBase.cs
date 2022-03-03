@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BetterGFE.NvNodeApi
+namespace NvNodeApi
 {
-    internal interface WrapperBase
+    internal abstract class ApiBase
     {
     }
 }
