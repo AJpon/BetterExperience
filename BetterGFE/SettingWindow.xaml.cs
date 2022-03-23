@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BetterGFE.Core;
 
 namespace BetterGFE
 {
@@ -24,9 +25,28 @@ namespace BetterGFE
             InitializeComponent();
         }
 
-        private void ClickOk(object sender, RoutedEventArgs e)
+        public ICommand  SaveAndCloseCommand
         {
+            get => new DelegateCommand()
+            {
+                CanExecuteFunc = () => true,
+                ExecuteFunc = () =>
+                {
+                    this.Close();
+                }
+            };
+        }
 
+        public ICommand  Cancel
+        {
+            get => new DelegateCommand()
+            {
+                CanExecuteFunc = () => true,
+                ExecuteFunc = () =>
+                {
+                    this.Close();
+                }
+            };
         }
     }
 }

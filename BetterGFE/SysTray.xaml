@@ -5,37 +5,7 @@
              xmlns:local="clr-namespace:BetterGFE" x:Class="BetterGFE.SysTray" 
              Height="0"
              Width="0">
-    <UserControl.Resources>
-        <ContextMenu x:Key="SysTrayMenu">
-            <MenuItem Header="Settings" Command="{Binding ShowSettings}" IsEnabled="False"/>
-            <Separator />
-            <MenuItem Header="ShadowPlay">
-                <MenuItem Header="ShadowPlay Service" IsEnabled="False"/>
-                <!-- <MenuItem x:Name="SpStatus" Header="{Binding ToggleSpActionLabel}"/> -->
-                <Separator />
-                <MenuItem Header="Start" Command="{Binding StartSp}" />
-                <MenuItem Header="Stop" Command="{Binding StopSp}" />
-                <Separator />
-                <MenuItem Header="Instant Replay" IsEnabled="False"/>
-                <Separator />
-                <MenuItem Header="Enable" Command="{Binding StartIr}" />
-                <MenuItem Header="Disable" Command="{Binding StopIr}" />
-                <MenuItem Header="Save" Command="{Binding SaveIr}" />
-            </MenuItem>
-            <Separator />
-            <MenuItem Header="Exit" Command="{Binding Exit}" />
-        </ContextMenu>
-    </UserControl.Resources>
     <tb:TaskbarIcon x:Name="NotifyIcon" 
-                    IconSource="\Resources\Icon.ico" 
-                    Visibility="Visible" 
-                    ToolTipText="Better Experience" 
-                    MenuActivation="LeftOrRightClick" 
-                    PopupActivation="DoubleClick" 
-                    ContextMenu="{StaticResource SysTrayMenu}" 
-                    PreviewTrayContextMenuOpen="TrayContextMenuOpening"
-                    />
-    <!-- <tb:TaskbarIcon x:Name="NotifyIcon" 
                     IconSource="\Resources\Icon.ico" 
                     Visibility="Visible" 
                     ToolTipText="Better Experience" 
@@ -45,19 +15,21 @@
                     >
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Settings" Command="{Binding ShowSettings}" />
+                <MenuItem Header="Settings" Command="{Binding ShowSettings}" IsEnabled="False"/>
                 <Separator />
                 <MenuItem Header="ShadowPlay">
-                    <MenuItem Header="ShadowPlay Service" IsEnabled="False"/>
-                    <MenuItem x:Name="SpStatus" Header="{Binding ToggleSpActionLabel}"/>
+                    <MenuItem x:Name="spStatus" Header="{Binding SpStatusLabel}" IsEnabled="False"/>
+                    <MenuItem x:Name="spToggle" Header="{Binding ToggleSpActionLabel}" Command="{Binding ToggleSp}"/>
                     <Separator />
-                    <MenuItem Header="Start" Command="{Binding StartSp}" />
-                    <MenuItem Header="Stop" Command="{Binding StopSp}" />
+                    <MenuItem Header="Instant Replay" IsEnabled="False"/>
                     <Separator />
+                    <MenuItem Header="Enable" Command="{Binding StartIr}" />
+                    <MenuItem Header="Disable" Command="{Binding StopIr}" />
+                    <MenuItem Header="Save" Command="{Binding SaveIr}" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Exit" Command="{Binding Exit}" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
-    </tb:TaskbarIcon> -->
+    </tb:TaskbarIcon>
 </UserControl>

@@ -25,43 +25,44 @@ namespace BetterGFE
     /// </summary>
     public partial class SysTray : UserControl
     {
-        private NvNodeApiWrapper api;
+        private NvNodeApiWrapper _api;
         /// <summary>
         /// ShadowPlay サーバーが起動しているかどうか
         /// </summary>
-        private bool isSpRunning = false;
+        private bool _isSpRunning = false;
         /// <summary>
         /// Instant Replay が有効かどうか
         /// </summary>
-        private bool isIrEnabled = false;
+        private bool _isIrEnabled = false;
         /// <summary>
         /// Instant Replay が実行中かどうか
         /// </summary>
-        private bool isIrRunning = false;
+        private bool _isIrRunning = false;
 
         public SysTray(NvNodeApiWrapper api)
         {
-            this.api = api;
-            UpdateStatus().Wait();
+            _api = api;
+            // UpdateStatus().Wait();
             InitializeComponent();
             this.DataContext = this;
         }
 
         void TrayContextMenuOpening(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("[BetterExperience] ContextMenuOpening");
+            // Debug.WriteLine("[BetterExperience] ContextMenuOpening");
             _ = UpdateStatus();
         }
 
         async Task UpdateStatus()
         {
-            isSpRunning = await api.ShadowPlay.GetSpRunning();
-            // Debug.WriteLine("[BetterExperience] isSpRunning=" + isSpRunning);
-            ToggleSpActionLabel = isSpRunning ? "Stop ShadowPlay" : "Start ShadowPlay";
+            _isSpRunning = await _api.ShadowPlay.GetSpRunning();
+            // Debug.WriteLine("[BetterExperience] _isSpRunning=" + _isSpRunning);
+            spStatus.Header = SpStatusLabel;
+            spToggle.Header = ToggleSpActionLabel;
             // Debug.WriteLine("[BetterExperience] ToggleSpActionLabel = " + ToggleSpActionLabel);
-            isIrEnabled = await api.ShadowPlay.GetIrEnabled();
-            isIrRunning = await api.ShadowPlay.GetIrRunning();
-            Debug.WriteLine("[BetterExperience] Status updated");
+            _isIrEnabled = await _api.ShadowPlay.GetIrEnabled();
+            _isIrRunning = await _api.ShadowPlay.GetIrRunning();
+            // Debug.WriteLine("[BetterExperience] Status updated");
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -104,30 +105,19 @@ namespace BetterGFE
         ////////////////////////////////////////////////////////////////////////////////
         // ShadowPlay Actions
 
-        public ICommand StartSp
+        public ICommand ToggleSp
         {
             get => new DelegateCommand()
             {
-                CanExecuteFunc = () => isSpRunning == false,
+                CanExecuteFunc = () => true,
                 ExecuteFunc = () =>
                 {
-                    api.ShadowPlay.LaunchSp(true);
+                    _api.ShadowPlay.LaunchSp(!_isSpRunning);
                 }
             };
         }
-
-        public ICommand StopSp
-        {
-            get => new DelegateCommand()
-            {
-                CanExecuteFunc = () => isSpRunning == true,
-                ExecuteFunc = () =>
-                {
-                    api.ShadowPlay.LaunchSp(false);
-                }
-            };
-        }
-        public string ToggleSpActionLabel { get; set; }
+        public string SpStatusLabel { get => _isSpRunning ? "ShadowPlay service is running" : "ShadowPlay service is stopped"; }
+        public string ToggleSpActionLabel { get => _isSpRunning ? "Stop ShadowPlay" : "Start ShadowPlay"; }
 
         ////////////////////////////////////////////////////////////////////////////////
         // Instant Replay(ShadowPlay) Actions
@@ -135,10 +125,10 @@ namespace BetterGFE
         {
             get => new DelegateCommand()
             {
-                CanExecuteFunc = () => isSpRunning && isIrEnabled == false,
+                CanExecuteFunc = () => _isSpRunning && _isIrEnabled == false,
                 ExecuteFunc = () =>
                 {
-                    api.ShadowPlay.EnableIr(true);
+                    _api.ShadowPlay.EnableIr(true);
                 }
             };
         }
@@ -147,10 +137,10 @@ namespace BetterGFE
         {
             get => new DelegateCommand()
             {
-                CanExecuteFunc = () => isSpRunning && isIrEnabled,
+                CanExecuteFunc = () => _isSpRunning && _isIrEnabled,
                 ExecuteFunc = () =>
                 {
-                    api.ShadowPlay.EnableIr(false);
+                    _api.ShadowPlay.EnableIr(false);
                 }
             };
         }
@@ -159,10 +149,10 @@ namespace BetterGFE
         {
             get => new DelegateCommand()
             {
-                CanExecuteFunc = () => isSpRunning && isIrEnabled && isIrRunning,
+                CanExecuteFunc = () => _isSpRunning && _isIrEnabled && _isIrRunning,
                 ExecuteFunc = () =>
                 {
-                    api.ShadowPlay.SaveIr();
+                    _api.ShadowPlay.SaveIr();
                 }
             };
         }
