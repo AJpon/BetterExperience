@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <TabControl TabStripPlacement="Left" Grid.ColumnSpan="1" Grid.RowSpan="1" Width="Auto" Height="Auto" Margin="10,10,10,0">
             <TabItem Header="General">
-                <CheckBox x:Name="checkBox" Content="CheckBox" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="runOnStartup" Content="Run on Windows startup" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top"/>
             </TabItem>
             <TabItem Header="Auto InstantReplay">
                 <TabControl>
