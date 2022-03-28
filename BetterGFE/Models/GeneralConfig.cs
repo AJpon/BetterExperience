@@ -1,10 +1,12 @@
-﻿using MessagePack;
+﻿using System.ComponentModel;
+using MessagePack;
 
 namespace BetterGFE.Models
 {
     [MessagePackObject(true)]
     public class GeneralConfig
     {
-        public bool RunOnStartup { get; set; }
+        [DefaultValue(true)]
+        public bool RunOnStartup { get; set; } = true;
     }
 }

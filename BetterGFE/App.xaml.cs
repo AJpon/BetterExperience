@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using NvNodeApi;
+using BetterGFE.Models;
 
 namespace BetterGFE
 {
@@ -20,6 +21,7 @@ namespace BetterGFE
         private SysTray st;
         public new int Run()
         {
+            Config.LoadConfig();
             //tb = (TaskbarIcon)FindResource("NotifyIcon");
             api = new NvNodeApiWrapper();
             st = new SysTray(api);

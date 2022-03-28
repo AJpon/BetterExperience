@@ -14,9 +14,9 @@ namespace BetterGFE.Models
         public static Config Instance { get; set; }
 
         [Key(0)]
-        public GeneralConfig GeneralConfig { get; set; }
+        public GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
         [Key(1)]
-        public AutoIrConfig AutoIrConfig { get; set; }
+        public AutoIrConfig AutoIrConfig { get; set; } = new AutoIrConfig();
 
         public static void SaveConfig() 
         {

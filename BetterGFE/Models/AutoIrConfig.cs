@@ -12,7 +12,7 @@ namespace BetterGFE.Models
         /// </summary>
         [DefaultValue(false)]
         public bool DisableIrWhenWhiteListNotRunning { get; set; } = false;
-        public List<ProcessInfo> WhiteList { get; set; }
-        public List<ProcessInfo> BlackList { get; set; }
+        public List<ProcessInfo> WhiteList { get; set; } = new List<ProcessInfo>();
+        public List<ProcessInfo> BlackList { get; set; } = new List<ProcessInfo>();
     }
 }

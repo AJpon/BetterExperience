@@ -21,10 +21,10 @@
             <TabItem Header="Auto InstantReplay">
                 <TabControl>
                     <TabItem Header="White list">
-                        <DataGrid x:Name="irWhiteList" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                        <DataGrid x:Name="irWhiteList"/>
                     </TabItem>
                     <TabItem Header="Black list">
-                        <DataGrid x:Name="irBlackList" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                        <DataGrid x:Name="irBlackList"/>
                     </TabItem>
                 </TabControl>
             </TabItem>
