@@ -9,8 +9,11 @@ namespace BetterGFE.Core
 {
     internal class DelegateCommand : ICommand
     {
-        public Action ExecuteFunc { get; set; }
-        public Func<bool> CanExecuteFunc { get; set; }
+        /// <summary>
+        /// The action to be called when the command is invoked.
+        /// </summary>
+        public virtual Action ExecuteFunc { get; set; }
+        public virtual Func<bool> CanExecuteFunc { get; set; }
 
         public DelegateCommand() { }
 
@@ -25,12 +28,12 @@ namespace BetterGFE.Core
             this.CanExecuteFunc = canExecute;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             ExecuteFunc();
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return CanExecuteFunc();
         }
@@ -39,6 +42,34 @@ namespace BetterGFE.Core
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
+        }
+    }
+
+    /// <typeparam name="T"><see cref="InputBinding.CommandParameter">CommandParameter</see> type</typeparam>
+    internal class DelegateCommand<T> : DelegateCommand, ICommand
+    {
+        /// <summary>
+        /// The action to be called when the command is invoked.
+        /// </summary>
+        public new Action<T> ExecuteFunc { get; set; }
+        public new Func<T, bool> CanExecuteFunc { get; set; }
+
+        public DelegateCommand() { }
+
+        public DelegateCommand(Action<T> execute)
+        {
+            this.ExecuteFunc = execute;
+        }
+
+        public DelegateCommand(Action<T> execute, Func<T, bool> canExecute)
+        {
+            this.ExecuteFunc = execute;
+            this.CanExecuteFunc = canExecute;
+        }
+
+        public void Execute(object? parameter)
+        {
+            ExecuteFunc((T)parameter);
         }
     }
 }
