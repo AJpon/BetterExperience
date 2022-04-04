@@ -27,26 +27,23 @@ namespace BetterGFE
         {
             InitializeComponent();
             this.DataContext = this;
-            runOnStartup.IsChecked = Config.Instance.GeneralConfig.RunOnStartup;
+            var config = Config.Instance.Clone();
+            runOnStartup.IsChecked = config.GeneralConfig.RunOnStartup;
 
-            irWhiteList.ItemsSource = Config.Instance.AutoIrConfig.WhiteList;
-            irBlackList.ItemsSource = Config.Instance.AutoIrConfig.BlackList;
+            irWhiteList.ItemsSource = config.AutoIrConfig.WhiteList;
+            irBlackList.ItemsSource = config.AutoIrConfig.BlackList;
         }
 
         public ICommand AddProgram
         {
-            get => new DelegateCommand<List<ProcessInfo>>()
+            get => new DelegateCommand<DataGrid>()
             {
-                CanExecuteFunc = (list) => true,
-                ExecuteFunc = (list) =>
+                CanExecuteFunc = (dg) => true,
+                ExecuteFunc = (dg) =>
                 {
-                    if (list == null)
+                    if (dg == null)
                     {
-                        throw new ArgumentNullException(nameof(list));
-                    }
-                    else if (typeof(List<ProcessInfo>) != list.GetType())
-                    {
-                        throw new ArgumentException($"{nameof(list)} must be {typeof(List<ProcessInfo>)}");
+                        throw new ArgumentNullException(nameof(dg));
                     }
 
                     var diag = new OpenFileDialog
@@ -57,12 +54,31 @@ namespace BetterGFE
                     {
                         return;
                     }
-                    ((List<ProcessInfo>)list).Add(new ProcessInfo
+                    var list = (List<ProcessInfo>)dg.ItemsSource;
+                    list.Add(new ProcessInfo
                     {
                         FilePath = diag.FileName,
                         ProcessName = diag.SafeFileName,
                     });
-                    // TODO: リストを更新
+                    dg.Items.Refresh();
+                }
+            };
+        }
+
+        public ICommand RemoveProgram
+        {
+            get => new DelegateCommand<DataGrid>()
+            {
+                CanExecuteFunc = (dg) => 0 <= dg.SelectedIndex,
+                ExecuteFunc = (dg) =>
+                {
+                    if (dg == null)
+                    {
+                        throw new ArgumentNullException(nameof(dg));
+                    }
+                    var list = (List<ProcessInfo>)dg.ItemsSource;
+                    list.RemoveAt(dg.SelectedIndex);
+                    dg.Items.Refresh();
                 }
             };
         }
@@ -81,7 +97,7 @@ namespace BetterGFE
                     Config.Instance.AutoIrConfig.BlackList = (List<ProcessInfo>)irBlackList.ItemsSource;
 
                     Config.SaveConfig();
-                    //Console.WriteLine("[BetterGFE] Save config");
+                    //Config.LoadConfig();
                     this.Close();
                 }
             };

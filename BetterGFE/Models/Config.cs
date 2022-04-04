@@ -18,7 +18,12 @@ namespace BetterGFE.Models
         [Key(1)]
         public AutoIrConfig AutoIrConfig { get; set; } = new AutoIrConfig();
 
-        public static void SaveConfig() 
+        public Config Clone()
+        {
+            return MessagePackSerializer.Deserialize<Config>(MessagePackSerializer.Serialize(this));
+        }
+
+        public static void SaveConfig()
         {
             var bytes = MessagePackSerializer.Serialize(Instance);
             using (var fs = new FileStream(Environment.ConfigurationPath, FileMode.Create))
