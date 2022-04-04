@@ -28,12 +28,12 @@ namespace BetterGFE.Core
             this.CanExecuteFunc = canExecute;
         }
 
-        public void Execute(object? parameter)
+        public virtual void Execute(object? parameter)
         {
             ExecuteFunc();
         }
 
-        public bool CanExecute(object? parameter)
+        public virtual bool CanExecute(object? parameter)
         {
             return CanExecuteFunc();
         }
@@ -67,9 +67,14 @@ namespace BetterGFE.Core
             this.CanExecuteFunc = canExecute;
         }
 
-        public void Execute(object? parameter)
+        public new void Execute(object? parameter)
         {
             ExecuteFunc((T)parameter);
+        }
+
+        public new bool CanExecute(object? parameter)
+        {
+            return CanExecuteFunc((T)parameter);
         }
     }
 }

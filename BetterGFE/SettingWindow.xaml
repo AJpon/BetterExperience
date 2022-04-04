@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BetterGFE"
         mc:Ignorable="d"
-        Title="SettingWindow" Height="300" Width="600" MinHeight="300" MinWidth="600">
+        Title="SettingWindow" Height="400" Width="800" MinHeight="300" MinWidth="600">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -16,15 +16,49 @@
         </Grid.RowDefinitions>
         <TabControl TabStripPlacement="Left" Grid.ColumnSpan="1" Grid.RowSpan="1" Width="Auto" Height="Auto" Margin="10,10,10,0">
             <TabItem Header="General">
-                <CheckBox x:Name="checkBox" Content="CheckBox" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="runOnStartup" Content="Run on Windows startup" HorizontalAlignment="Left" Margin="21,10,0,0" VerticalAlignment="Top"/>
             </TabItem>
-            <TabItem Header="Auto InstantReplay">
-                <TabControl>
+            <TabItem Header="Auto InstantReplay" Height="20" VerticalAlignment="Top">
+                <TabControl Margin="6">
                     <TabItem Header="White list">
-                        <DataGrid x:Name="irWhiteList" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="96"/>
+                            </Grid.ColumnDefinitions>
+                            <DataGrid x:Name="irWhiteList" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" CanUserReorderColumns="False" IsReadOnly="True" SelectionMode="Single" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,96,0" Grid.RowSpan="2">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ProcessName}" Width="130"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding FilePath}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Content="Add program" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90" Height="20" Grid.Column="1" Grid.Row="0" Command="{Binding AddProgram}" CommandParameter="{Binding ElementName=irWhiteList}"/>
+                            <Button Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90" Height="20" Grid.Column="1" Grid.Row="1" Command="{Binding RemoveProgram}" CommandParameter="{Binding ElementName=irWhiteList}"/>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Black list">
-                        <DataGrid x:Name="irBlackList" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="96"/>
+                            </Grid.ColumnDefinitions>
+                            <DataGrid x:Name="irBlackList" AutoGenerateColumns="False" CanUserAddRows="False" CanUserSortColumns="False" CanUserReorderColumns="False" IsReadOnly="True" SelectionMode="Single" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,96,0" Grid.RowSpan="2">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ProcessName}" Width="130"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding FilePath}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Content="Add program" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90" Height="20" Grid.Column="1" Grid.Row="0" Command="{Binding AddProgram}" CommandParameter="{Binding ElementName=irBlackList}"/>
+                            <Button Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90" Height="20" Grid.Column="1" Grid.Row="1" Command="{Binding RemoveProgram}" CommandParameter="{Binding ElementName=irBlackList}"/>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </TabItem>
