@@ -13,7 +13,7 @@ namespace BetterGFE.Core
         public List<Process> Processes { get; set; }
         private CancellationTokenSource _watcherTokenSource;
 
-        public string GetFilePath(Process ps)
+        public static string GetFilePath(Process ps)
         {
             return ps.MainModule.FileName;
         }
@@ -25,13 +25,14 @@ namespace BetterGFE.Core
             Task.Factory.StartNew(Watch, _watcherTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        private void Update() {
+        private void Update()
+        {
             Processes = Process.GetProcesses().ToList();
         }
 
         private async void Watch()
         {
-            while(!_watcherTokenSource.IsCancellationRequested)
+            while (!_watcherTokenSource.IsCancellationRequested)
             {
                 Update();
                 await Task.Delay(3000);
@@ -39,8 +40,13 @@ namespace BetterGFE.Core
             Debug.WriteLine("[BetterGFE] ProcessWatcher stopped");
         }
 
-        public void Stop() { 
-            _watcherTokenSource.Cancel();
+        public void Stop()
+        {
+            if (_watcherTokenSource != null)
+            {
+                _watcherTokenSource.Cancel();
+                _watcherTokenSource.Dispose();
+            }
         }
     }
 }
