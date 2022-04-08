@@ -42,7 +42,7 @@ namespace BetterGFE
         public SysTray(NvNodeApiWrapper api)
         {
             _api = api;
-            // UpdateStatus().Wait();
+            _ = UpdateStatus();
             InitializeComponent();
             this.DataContext = this;
         }
