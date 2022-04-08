@@ -47,6 +47,7 @@ namespace BetterGFE
             _api = api;
             _irService = new InstantReplayService(_api);
             // UpdateStatus().Wait();
+            _ = UpdateStatus();
             InitializeComponent();
             this.DataContext = this;
         }
