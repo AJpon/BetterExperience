@@ -18,6 +18,7 @@ namespace BetterGFE
     /// </summary>
     public partial class App : Application
     {
+        public static App Instance { get; private set; }
         public NvNodeApiWrapper api;
         //private TaskbarIcon tb;
         private SysTray st;
@@ -25,6 +26,7 @@ namespace BetterGFE
 
         public new int Run()
         {
+            Instance = this;
             Config.LoadConfig();
             //tb = (TaskbarIcon)FindResource("NotifyIcon");
             api = new NvNodeApiWrapper();
@@ -45,11 +47,20 @@ namespace BetterGFE
                 if (p.ProcessName.Equals("NVIDIA Web Helper"))
                 {
                     Debug.WriteLine("[BetterGFE] Found Web Helper");
+                    base.OnStartup(e);
                     return;
                 }
             }
             MessageBox.Show("[BetterGFE] Web Helper not running. Please start it and try again.", "BetterGFE", MessageBoxButton.OK, MessageBoxImage.Error);
+            base.OnStartup(e);
             Shutdown();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Watcher.Stop();
+            Config.SaveConfig();
+            base.OnExit(e);
         }
     }
 }

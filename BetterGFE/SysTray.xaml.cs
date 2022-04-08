@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using NvNodeApi;
 using BetterGFE.Core;
 using System.Windows.Threading;
+using BetterGFE.Modules.ShadowPlay;
+using BetterGFE.Models;
 
 namespace BetterGFE
 {
@@ -26,6 +28,7 @@ namespace BetterGFE
     public partial class SysTray : UserControl
     {
         private NvNodeApiWrapper _api;
+        private InstantReplayService _irService;
         /// <summary>
         /// ShadowPlay サーバーが起動しているかどうか
         /// </summary>
@@ -42,6 +45,7 @@ namespace BetterGFE
         public SysTray(NvNodeApiWrapper api)
         {
             _api = api;
+            _irService = new InstantReplayService(_api);
             // UpdateStatus().Wait();
             InitializeComponent();
             this.DataContext = this;
@@ -63,6 +67,7 @@ namespace BetterGFE
             _isIrEnabled = await _api.ShadowPlay.GetIrEnabled();
             _isIrRunning = await _api.ShadowPlay.GetIrRunning();
             // Debug.WriteLine("[BetterExperience] Status updated");
+            toggleAutoIr.IsChecked = Config.Instance.AutoIrConfig.Enabled;
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +158,26 @@ namespace BetterGFE
                 ExecuteFunc = () =>
                 {
                     _api.ShadowPlay.SaveIr();
+                }
+            };
+        }
+
+        public ICommand ToggleAutoIr
+        {
+            get => new DelegateCommand()
+            {
+                CanExecuteFunc = () => true,
+                ExecuteFunc = () =>
+                {
+                    Config.Instance.AutoIrConfig.Enabled = !Config.Instance.AutoIrConfig.Enabled;
+                    if (Config.Instance.AutoIrConfig.Enabled)
+                    {
+                        _irService.Start();
+                    }
+                    else
+                    {
+                        _irService.Stop();
+                    }
                 }
             };
         }

@@ -26,6 +26,8 @@
                     <MenuItem Header="Enable" Command="{Binding StartIr}" />
                     <MenuItem Header="Disable" Command="{Binding StopIr}" />
                     <MenuItem Header="Save" Command="{Binding SaveIr}" />
+                    <Separator />
+                    <MenuItem x:Name="toggleAutoIr" Header="Auto Instant Replay" Command="{Binding ToggleAutoIr}" IsCheckable="True"/>
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Exit" Command="{Binding Exit}" />
