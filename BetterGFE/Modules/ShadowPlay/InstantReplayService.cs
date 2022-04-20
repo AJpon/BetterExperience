@@ -22,7 +22,7 @@ namespace BetterGFE.Modules.ShadowPlay
             _api = api;
             Initialize();
         }
-        
+
         private void Initialize()
         {
             _autoEnabled = false;
@@ -50,27 +50,38 @@ namespace BetterGFE.Modules.ShadowPlay
         }
         private async void AutoToggleIr()
         {
-            while (!_cancellationTokenSource.IsCancellationRequested)
+            try
             {
-                if (await _api.ShadowPlay.GetIrRunning() == true)
+                while (!_cancellationTokenSource.IsCancellationRequested)
                 {
-                    _autoEnabled = true;
-                    var isRunningBlacklistedProcess = CheckRunningBlacklistedProcess();
-                    if (isRunningBlacklistedProcess)
+                    if (await _api.ShadowPlay.GetSpRunning())
                     {
-                        await _api.ShadowPlay.EnableIr(false);
+                        if (await _api.ShadowPlay.GetIrRunning())
+                        {
+                            _autoEnabled = true;
+                            var isRunningBlacklistedProcess = CheckRunningBlacklistedProcess();
+                            if (isRunningBlacklistedProcess)
+                            {
+                                await _api.ShadowPlay.EnableIr(false);
+                            }
+                        }
+                        else
+                        {
+                            var isRunningWhiteListedProcess = CheckRunningWhitelistedProcess();
+                            if (isRunningWhiteListedProcess && _autoEnabled == false)
+                            {
+                                await _api.ShadowPlay.EnableIr(true);
+                                _autoEnabled = true;
+                            }
+                        }
                     }
+                    await Task.Delay(Config.Instance.AutoIrConfig.Interval);
                 }
-                else
-                {
-                    var isRunningWhiteListedProcess = CheckRunningWhitelistedProcess();
-                    if (isRunningWhiteListedProcess && _autoEnabled == false)
-                    {
-                        await _api.ShadowPlay.EnableIr(true);
-                        _autoEnabled = true;
-                    }
-                }
-                await Task.Delay(Config.Instance.AutoIrConfig.Interval);
+            }
+            catch (Exception ex)
+            {
+                //Logger.Instance.Log(ex.Message);
+                Stop();
             }
 
             bool CheckRunningBlacklistedProcess()
@@ -95,7 +106,7 @@ namespace BetterGFE.Modules.ShadowPlay
                     try
                     {
                         var filePath = ProcessWatcher.GetFilePath(ps);
-                        Debug.WriteLine("[" + ps.Id + "]" + filePath);
+                        //Debug.WriteLine("[" + ps.Id + "]" + filePath);
                         foreach (var whiteListed in Config.Instance.AutoIrConfig.WhiteList)
                         {
                             if (filePath.Equals(whiteListed.FilePath))
